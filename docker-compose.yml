@@ -23,7 +23,7 @@ services:
       - AWS_DEFAULT_REGION=ap-southeast-3
       - AWS_BUCKET=${MINIO_BUCKET}
       - AWS_ENDPOINT=http://minio:9000
-      - AWS_URL=http://localhost:9000
+      - AWS_URL=http://localhost:9000/${MINIO_BUCKET}
       - AWS_USE_PATH_STYLE_ENDPOINT=true
       - FILESYSTEM_DISK=s3
     depends_on:
