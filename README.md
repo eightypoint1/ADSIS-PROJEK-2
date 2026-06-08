@@ -1,10 +1,9 @@
-# Nusantara Tech — Sistem Informasi Akademik (SIA)
-
-> **Tugas Administrasi Sistem** — Development Environment in a Box
+> **Tugas ASIS TI-D** — 
 >
-> A fully Dockerized academic information system built with Laravel, MySQL, MinIO,
-> Nginx, and phpMyAdmin. Designed to mimic **SIAMUB** (Sistem Informasi Akademik
-> Mahasiswa Universitas Brawijaya), a real Indonesian university student portal.
+> Nurul Inayah - 245150700111013 
+> Ezekiel Aaron Marmora - 245150701111017
+> Oase Bimasena I - 245150707111059
+> 
 
 ---
 
@@ -37,69 +36,32 @@ docker compose version
 
 ---
 
-## 3. Quick Start — Zero to Running
-
-### 3.1 Clone and enter project
+## 3. Installation
 
 ```bash
 git clone <repo-url> nusantara-tech
 cd nusantara-tech
-```
 
-### 3.2 Create environment file
-
-```bash
 cp .env.example .env
-```
 
-The `.env.example` contains placeholder values that work out of the box for local
-development. No editing required unless you want custom credentials.
-
-### 3.3 Build and start all services
-
-```bash
+# Start 5 images
 docker compose up -d --build
-```
 
-This builds the custom PHP-FPM image and starts all 5 services in detached mode.
-
-> **What happens:** Docker builds the `app` image (PHP 8.2 + Composer + extensions),
-> pulls `mysql:8.0`, `nginx:1.25-alpine`, `minio/minio:latest`, and
-> `phpmyadmin:latest`, then starts everything on a shared bridge network.
-
-### 3.4 Generate application key
-
-```bash
+# Generate key
 docker compose exec app php artisan key:generate
-```
 
-### 3.5 Run database migrations
-
-```bash
+# Migrate database
 docker compose exec app php artisan migrate
-```
 
-### 3.6 Configure MinIO bucket
-
-```bash
+# Configure MinIO
 docker compose exec minio mc alias set local http://localhost:9000 minioadmin minioadmin123
 docker compose exec minio mc mb local/nusantara-uploads
 docker compose exec minio mc anonymous set public local/nusantara-uploads
-```
 
-### 3.7 Seed test user (optional)
-
-```bash
 docker compose exec app php artisan db:seed
+
 ```
-
-Creates a demo account: `andi@student.ac.id` / `password123`
-
-### 3.8 Open the application
-
-Visit **http://localhost** in your browser. You will be redirected to the login page.
-
----
+### DEMO ACCOUNT: `andi@student.ac.id` / `password123`
 
 ## 4. Access Points
 
@@ -171,15 +133,8 @@ Dalam arsitektur *container*, komunikasi antar-layanan adalah hal krusial. Mohon
 | API endpoint | `http://minio:9000` (internal Docker network) |
 | Public URL | `http://localhost:9000/nusantara-uploads/avatars/<filename>` |
 
-### How profile photos work
 
-1. User uploads a photo via Edit Profile page
-2. File is stored in MinIO bucket `nusantara-uploads` under `avatars/` prefix
-3. Old photo (if exists) is deleted from MinIO before new one is saved
-4. Photo URL on dashboard: `http://localhost:9000/nusantara-uploads/avatars/<file>.jpg`
-5. Bucket is publicly readable — images load directly in the browser
-
-### Manual bucket operations
+### Manual check
 
 ```bash
 # List files in bucket
@@ -192,31 +147,8 @@ docker compose exec minio mc du local/nusantara-uploads
 docker compose exec minio mc anonymous set public local/nusantara-uploads
 ```
 
----
 
-## 8. Data Persistence
-
-Two **named Docker volumes** are declared at the top level of `docker-compose.yml`:
-
-| Volume        | Mount Point         | Stores           | Survives `down`? | Survives `down -v`? |
-|---------------|---------------------|------------------|:---:|:---:|
-| `db_data`     | `/var/lib/mysql`    | MySQL database   | ✅  | ❌  |
-| `minio_data`  | `/data`             | MinIO objects    | ✅  | ❌  |
-
-```bash
-# Stop all containers — volumes preserved, data safe
-docker compose down
-
-# WARNING: This deletes all database records and uploaded files!
-docker compose down -v
-```
-
-**Always use `docker compose down` without `-v`** for normal workflow.
-Only use `-v` if you want a completely fresh start.
-
----
-
-## 9. Stopping & Tearing Down
+## 8. Stopping & Tearing Down
 
 ```bash
 # Stop all containers (data preserved)
@@ -241,20 +173,17 @@ docker compose logs -f db
 
 ---
 
-## 10. Proof of Connectivity — Screenshots
+## 9. Screenshots
 
-All screenshots are stored in the `/screenshots` folder. These demonstrate that
-every service is running and communicating correctly.
-
-### 10.1 App ↔ Database (MySQL)
+### 9.1 App ↔ Database (MySQL)
 
 ![phpMyAdmin users table](screenshots/phpmyadmin-users-table.png)
 
-### 10.2 App ↔ MinIO Object Storage
+### 9.2 App ↔ MinIO Object Storage
 
 ![MinIO bucket avatars](screenshots/minio-bucket-avatars.png)
 
-### 10.3 Web Application Pages
+### 9.3 Web Application Pages
 
 ![Login page](screenshots/app-login.png)
 
