@@ -1,9 +1,10 @@
-> **Tugas ASIS TI-D** — 
->
-> Nurul Inayah - 245150700111013 
-> Ezekiel Aaron Marmora - 245150701111017
-> Oase Bimasena I - 245150707111059
-> 
+> **Tugas ADSIS TI-D** 
+
+
+### Ezekiel Aaron Marmora - 245150701111017
+### Nurul Inayah - 245150700111013 
+### Oase Bimasena I - 245150707111059
+
 
 ---
 
