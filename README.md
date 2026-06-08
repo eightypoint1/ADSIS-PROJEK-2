@@ -250,33 +250,21 @@ every service is running and communicating correctly.
 
 ![phpMyAdmin users table](screenshots/phpmyadmin-users-table.png)
 
-*phpMyAdmin showing the `users` table with registered student accounts.
-Proves the Laravel app successfully connects to and writes to the MySQL database.*
-
 ### 10.2 App ↔ MinIO Object Storage
 
 ![MinIO bucket avatars](screenshots/minio-bucket-avatars.png)
 
-*MinIO console showing the `nusantara-uploads` bucket with uploaded profile photos
-under the `avatars/` prefix. Proves the app successfully stores and retrieves files
-from MinIO S3-compatible storage.*
-
 ### 10.3 Web Application Pages
 
 ![Login page](screenshots/app-login.png)
-*Login page (http://localhost) — SIAMUB-style design with centered white card on steel blue background.*
 
 ![Register page](screenshots/app-register.png)
-*Registration page with all required fields: Nama Lengkap, NIM, Email, Jurusan, Angkatan, Password.*
 
 ![Dashboard without photo](screenshots/app-dashboard-no-photo.png)
-*Student dashboard showing grey SVG silhouette placeholder when no profile photo has been uploaded.*
 
 ![Dashboard with photo](screenshots/app-dashboard-with-photo.png)
-*Student dashboard with uploaded profile photo displayed in the photo box.*
 
 ![Edit profile page](screenshots/app-edit-profile.png)
-*Edit profile form where users can update name, email, major, angkatan, upload a photo, or change password.*
 
 ---
 
@@ -321,48 +309,3 @@ All communication uses **Docker service names** on the `nusantara_network` bridg
 No `localhost` is used for inter-container communication.
 
 ---
-
-## 12. UI Design Rationale
-
-The interface deliberately mimics **SIAMUB (Sistem Informasi Akademik Mahasiswa
-Universitas Brawijaya)** — the real student portal of Universitas Brawijaya.
-This is not a generic admin dashboard or SaaS panel.
-
-**SIAMUB design elements adopted:**
-- **Page background:** `#1a6496` (SIAMUB steel blue)
-- **Top navigation:** white bar with `#b3c6d3` bottom border, SIAM UB logo on left, icon menu (AKADEMIK, BIODATA, KELUAR) on right
-- **Content panels:** white background, `1px solid #b3c6d3` border, square corners (institutional, not rounded)
-- **Profile card:** photo on left (`2px solid #2980b9` border), student info on right
-- **Sidebar menu:** right-aligned, ▶ triangle markers, uppercase labels, hover highlight
-- **Announcement banners:** green (email info) and purple (welcome message) below profile card
-- **Typography:** institutional font stack, NIM in monospace `#2980b9`
-
-**Student perspective:** Each logged-in user sees only their own data — this is an
-individual student portal, not an administrator management panel. No user lists,
-data tables, or charts.
-
----
-
-## 13. Important Notes
-
-- **Manual Laravel auth** — NOT Breeze, Jetstream, or any starter kit
-- **No Node.js build pipeline** — Tailwind CSS and Alpine.js loaded from CDN
-- **Non-root container** — PHP-FPM runs as `appuser` (uid 1000)
-- **AWS_ENDPOINT** inside container = `http://minio:9000` (Docker service name)
-- **AWS_URL** for public access = `http://localhost:9000/nusantara-uploads`
-- **AWS_USE_PATH_STYLE_ENDPOINT=true** is mandatory for MinIO (not virtual hosted-style)
-- All credentials live in `.env` — nothing is hardcoded in committed files
-- `docker compose down` preserves data; `docker compose down -v` destroys everything
-
----
-
-## 14. Troubleshooting
-
-| Problem | Solution |
-|---------|----------|
-| Port 80 already in use | Stop other web servers: `sudo systemctl stop apache2` or change nginx port in `docker-compose.yml` |
-| "No application encryption key" | Run `docker compose exec app php artisan key:generate` |
-| MinIO upload fails | Re-run bucket setup commands from Section 3.6 |
-| Database connection refused | Wait for MySQL healthcheck (healthy status), then retry |
-| Photo not showing on dashboard | Verify bucket is public: `docker compose exec minio mc anonymous get local/nusantara-uploads` |
-| Permission denied on storage/ | Run `docker compose exec app chmod -R 755 storage bootstrap/cache` |
